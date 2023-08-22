@@ -4,12 +4,16 @@ import { defineConfig } from 'vite'
 		import AutoImport from 'unplugin-auto-import/vite';
 		import Components from 'unplugin-vue-components/vite'
 		import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
-
+		import requireTransform from 'vite-plugin-require-transform';
 		const path = require('path');
 		export default defineConfig({
 		  plugins: [
 		    vue(),
+			requireTransform({
+				fileRegex: /.js$|.vue$/
+			  }),
 		    //配置插件
+
 		    AutoImport({
 		      resolvers: [ElementPlusResolver()],
 		      imports:['vue','vue-router']

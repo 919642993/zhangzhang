@@ -1,193 +1,488 @@
 <template>
-	<div class='nav-swiper'>
-		<div class='nav-swiper-main'>
-			<div class='swiper-t'>
+	<div class='navSwiper'>
+		<div class='content'>
+			<div class='navigation'>
 				<ul>
-					<li class='active'>
-						<span>HTML/CSS</span>
-						<el-icon><ArrowRight /></el-icon>
-					</li>
-					<li>
-						<span>HTML/CSS</span>
-						<el-icon><ArrowRight /></el-icon>
-					</li>
-					<li>
-						<span>HTML/CSS</span>
-						<el-icon><ArrowRight /></el-icon>
-					</li>
-					<li>
-						<span>HTML/CSS</span>
-						<el-icon><ArrowRight /></el-icon>
-					</li>
-					<li>
-						<span>HTML/CSS</span>
-						<el-icon><ArrowRight /></el-icon>
+					<li 
+						v-for='item in getFirstList'
+						:key='item.id'
+						@mouseenter="mourseHover(item.id)"
+						@mouseleave="mourseOut"
+					>
+						<router-link to='/'>
+							{{item.categoryName}}
+							<el-icon color='#ffffff' :size='16'><arrow-right /></el-icon>
+						</router-link>
+						<div class='category-detail' v-if='isFirst'>
+							<div class='detail-main'>
+								<div class='detail-desc'>基础知识</div>
+								<div class='detail-list'>
+									<div class='list-know'>知识点：</div>
+									<div class='list-ul'>
+										<router-link 
+											to='/' 
+											class='list-item'
+											v-for='item in tagsPageList'
+											:key='item.id'
+										>{{ item.tagName }}</router-link>
+									</div>
+								</div>
+								<div class='detail-class'>
+									<div 
+										class='course-card'
+										v-for='item in searchCourseList'
+										:key='item.id'
+									>
+										<div class='course-image'>
+											<img :src="item.courseCover">
+										</div>
+										<div class='right'>
+											<div class='courseName'>
+												{{ item.courseName }}
+											</div>
+											<div class="courseDegree">{{ courseTypeFn(item.courseLevel) }} · {{ item.purchaseCounter + item.purchaseCnt }}人购买</div>
+											<div class='buy'>
+												<div class='buy-free'>
+													<div class='coursePrice'>
+														<div class='courseMemberbg'>
+															<span class='courseMember'>会员专享</span>
+														</div>
+														<div class='price'>¥{{item.discountPrice}}</div>
+													</div>
+													<div class='cart'>
+														<div class='cart-image'>
+															<img src="http://localhost:8080/image/cart16.png">
+														</div>
+														<span class='addcart'>加入购物车</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
 					</li>
 				</ul>
-				<div>
-					<el-carousel 
-						:interval="3000" 
-						arrow="always"
-						v-if='sliderList.length > 0'
-					>
-					    <el-carousel-item 
-					    	v-for="item in sliderList" 
-					    	:key="item.id"
-					    >
-					      <img :src="item.imageUrl" />
-					    </el-carousel-item>
-					</el-carousel>
-				</div>
 			</div>
-			<ul class='swiper-b'> 
-				<li>
-					<h3>
-						<img src="@/assets/img/chuji.png" />
-					</h3>
-					<div>
-						<h4>初级课程</h4>
-						<span>入门快，岗位多</span>
+			<div class='sliders'>
+				<el-carousel 
+					:interval="5000" 
+					arrow="always"  
+					height="460px"
+					v-if='slidersList.length > 0'
+				>
+				    <el-carousel-item
+				    	v-for='item in slidersList'
+				    	:key='item.id'
+				    >
+				      <img :src="item.imageUrl">
+				    </el-carousel-item>
+				</el-carousel>
+			</div>
+		</div>
+		<div class='course-type'>
+			<div class='course-type-item'>
+				<router-link to='/'>
+					<div class='course-type-item-icon'>
+						<img src="../../assets/img/chuji.png">
 					</div>
-				</li>
-				<li>
-					<h3>
-						<img src="@/assets/img/chuji.png" />
-					</h3>
-					<div>
-						<h4>初级课程</h4>
-						<span>入门快，岗位多</span>
+					<div class='course-type-item-text'>
+						<div class='course-type-item-title'>初级课程</div>
+						<div class="course-type-item-desc">入门快、岗位多</div>
 					</div>
-				</li>
-				<li>
-					<h3>
-						<img src="@/assets/img/chuji.png" />
-					</h3>
-					<div>
-						<h4>初级课程</h4>
-						<span>入门快，岗位多</span>
+				</router-link>	
+			</div>
+			<div class='course-type-item'>
+				<router-link to='/'>
+					<div class='course-type-item-icon'>
+						<img src="../../assets/img/zhongji.png">
 					</div>
-				</li>
-				<li>
-					<h3>
-						<img src="@/assets/img/chuji.png" />
-					</h3>
-					<div>
-						<h4>初级课程</h4>
-						<span>入门快，岗位多</span>
+					<div class='course-type-item-text'>
+						<div class='course-type-item-title'>中级课程</div>
+						<div class="course-type-item-desc">进阶与实战</div>
 					</div>
-				</li>
-				<li>
-					<h3>
-						<img src="@/assets/img/chuji.png" />
-					</h3>
-					<div>
-						<h4>初级课程</h4>
-						<span>入门快，岗位多</span>
+				</router-link>	
+			</div>
+			<div class='course-type-item'>
+				<router-link to='/'>
+					<div class='course-type-item-icon'>
+						<img src="../../assets/img/gaoji.png">
 					</div>
-				</li>
-			</ul>
+					<div class='course-type-item-text'>
+						<div class='course-type-item-title'>高级课程</div>
+						<div class="course-type-item-desc">轻松掌握核心技能</div>
+					</div>
+				</router-link>	
+			</div>
+			<div class='course-type-item'>
+				<router-link to='/'>
+					<div class='course-type-item-icon'>
+						<img src="../../assets/img/xiangmu.png">
+					</div>
+					<div class='course-type-item-text'>
+						<div class='course-type-item-title'>项目实战</div>
+						<div class="course-type-item-desc">手把手实践</div>
+					</div>
+				</router-link>	
+			</div>
+			<div class='course-type-item'>
+				<router-link to='/'>
+					<div class='course-type-item-icon'>
+						<img src="../../assets/img/suanfa.png">
+					</div>
+					<div class='course-type-item-text'>
+						<div class='course-type-item-title'>前端算法</div>
+						<div class="course-type-item-desc">笑傲前端技能</div>
+					</div>
+				</router-link>	
+			</div>
 		</div>
 	</div>
 </template>
 
+
 <script setup>
-//element
-import { ArrowRight } from '@element-plus/icons-vue';
+//mixin
+import mixin from '../../mixins/courseType.js'
+let { courseTypeFn } = mixin();
 
-//api
-import { getSliders } from '@/utils/api/slider'
+import { ArrowRight } from "@element-plus/icons-vue";
+//api文件
+import { getFirstCategorys , tagsList , searchCourse  , getSliders } from '../../utils/api/courseManage'
 
-//轮播图数据
-let sliderList = ref([]);
+//获取一级课程分类的数据
+let getFirstList = ref([]);
+//鼠标移入的默认布尔值
+let isFirst = ref(false);
+//获取图片轮播的数据
+let slidersList = ref([]);
 //生命周期
 onBeforeMount(()=>{
-
-	//轮播图数据
+	//获取一级课程分类
+	getFirstCategorys().then(res=>{
+		getFirstList.value = res.data.list;
+	})
+	//获取图片轮播数据
 	getSliders().then(res=>{
-		sliderList.value = res.data.list;
-		console.log( res.data.list );
+		slidersList.value = res.data.list;
 	})
 })
+
+//获取课程标签的数据
+let tagsParams = {
+	pageNum:1, 			
+	pageSize:10,		
+	entity:{
+		firstCategory:'',
+	}
+}
+let tagsPageList = ref([]);
+//查询课程的数据
+let searchCourseList = ref([]);
+//鼠标移入
+const mourseHover = ( id )=>{
+	isFirst.value = true;
+	//一级id赋值
+	tagsParams.entity.firstCategory = id;
+	//查询课程标签
+	tagsList(tagsParams).then(res=>{
+		tagsPageList.value = res.data.pageInfo.list;
+	})
+	//查询课程
+	searchCourse(tagsParams).then(res=>{
+		searchCourseList.value = res.data.pageInfo.list;
+	})
+}	
+//鼠标移出
+const mourseOut = ()=>{
+	isFirst.value = false;
+}
 </script>
 
 <style scoped>
-.nav-swiper{
-	background: url('@/assets/img/transitionbg.png') no-repeat;
+.navSwiper{
+	padding-top: 1px;
+    width: 100%;
+    height: 640px;
+    background: url('../../assets/img/transitionbg.png') no-repeat;
+}
+.content{
+	position: relative;
+	display: flex;
+	width: 1200px;
+    height: 460px;
+    margin: 35px auto 0 auto;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    overflow: hidden;
+}
+.navigation{
+	width: 240px;
+    height: 460px;
+    background: #2b283d;
+}
+.navigation ul{
+	margin:20px 0;
+}
+.navigation ul li{
+	height: 40px;
+    list-style: none;
+    margin-bottom: 5px;
+}
+.navigation ul li a {
+	display: flex;
+	justify-content: space-between;;
+	align-items: center;
+	padding: 0 20px;
+	color: #ffffff;
+	height: 40px;
+	line-height: 40px;
+	font-size: 16px;
+	font-weight: bold;
+	text-decoration: none;
+}
+.navigation ul li a:hover {
+	background: linear-gradient(to right, #3fe5ff, transparent);
+}
+.sliders{
+	width: 1060px;
+    height: 460px;
+}
+.sliders img{
 	width: 100%;
-	height: 600px;
-}
-.nav-swiper-main{
-	width: 1000px;
-	padding: 47px 0;
-	margin: 0 auto;
-}
-.swiper-t{
-	display: flex;
-	height: 373px;
-	border-radius: 11px 11px 0px 0px;
-}
-.swiper-t ul{
-	display: flex;
-	flex-direction: column;
-	justify-content: space-around;
-	width: 160px;
 	height: 100%;
-	background: #2B283D;
-	border-radius: 11px 0px 0px 0px;
 }
-.swiper-t ul li{
+.category-detail {
+  position: absolute;
+  top: 0;
+  left: 220px;
+  background: rgba(255, 255, 255);
+  z-index: 65535;
+  min-width: 800px;
+  height: 460px;
+  border-top-right-radius: 10px;
+  box-sizing: border-box;
+}
+.detail-main {
+  cursor: pointer;
+  height: 100%;
+  position: relative;
+}
+.detail-desc {
+  padding-top: 20px;
+  padding-left: 20px;
+  height: 26px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333333;
+  opacity: 1;
+}
+.detail-list {
+  width: 100%;
+  display: flex;
+  margin-top: 10px;
+  padding-left: 20px;
+  color: #333333;
+  font-weight: 400;
+  font-size: 14px;
+}
+.list-know {
+  width: 70px;
+  height: 30px;
+  line-height: 30px;
+}
+.list-ul {
+  width: calc(100% - 70px);
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.list-item {
+  line-height: 30px !important;
+  padding: 0 10px !important;
+  color: #333333 !important;
+  font-size: 14px !important;
+  font-weight: unset !important;
+  height: auto !important;
+}
+.list-item:hover {
+  background: unset !important;
+  color: #00ffff;
+}
+.detail-class {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+  height: 270px;
+  padding: 20px 20px;
+  background-color: #F3F5F6;
+  box-sizing: border-box;
+}
+
+.course-card {
+  display: flex;
+  margin-bottom: 20px;
+  align-items: center;
+  width: 370px;
+  height: 110px;
+  box-sizing: border-box;
+}
+
+.course-image {
+  width: 100%;
+  height: 90px;
+  cursor: pointer;
+}
+
+.course-image img {
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+}
+
+.right {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 90px;
+  padding: 5px;
+  box-sizing: border-box;
+}
+
+.courseName {
+  width: 100%;
+  font-weight: bold;
+  font-size: 12px;
+  color: #333333;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.courseDegree {
+  font-size: 12px;
+  color: #808080;
+}
+
+.coursePrice {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+}
+
+.coursePriceZero {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pricePri {
+  font-size: 12px;
+}
+
+.price {
+  margin-left: 5px;
+  color: red;
+}
+
+.courseMember {
+  color: #FFFFFF;
+  padding: 2px;
+  box-sizing: border-box;
+  background: red;
+  border-radius: 6px;
+}
+
+.coursePricePri {
+  font-size: 12px;
+}
+
+.buy {
+  width: 200px;
+  display: flex;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.buy-free {
+  display: flex;
+  align-items: center;
+}
+
+.buy-free img {
+  width: 12px;
+  height: 12px;
+  margin-left: 10px;
+}
+
+.buy .learn {
+  color: #3586FF;
+  font-size: 12px;
+}
+
+.buy .cart {
+  display: flex;
+  margin-right: 5px;
+  font-size: 12px;
+}
+
+.buy .addcart {
+  margin-left: 2px;
+  color: #FF3D17;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.course-type{
 	display: flex;
-	align-items: center;
-	justify-content: space-around;
-	width: 160px;
-	height: 37px;
-	font-size: 16px;
-	color: #F2F2F2;
-	cursor: pointer;
+	width: calc(1200px);
+	margin: 0 auto;
+	background: #ffffff;
+    box-shadow: 0px 10px 25px 10px #d2d2d2;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
-.active{
-	background: linear-gradient(90deg, #3FE5FF 0%, rgba(62, 222, 255, 0.93) 2%, rgba(60, 203, 255, 0.73) 9%, rgba(58, 186, 255, 0.56) 17%, rgba(57, 172, 255, 0.41) 25%, rgba(55, 160, 255, 0.28) 33%, rgba(54, 150, 255, 0.18) 43%, rgba(53, 142, 255, 0.1) 53%, rgba(53, 137, 255, 0.04) 64%, rgba(53, 133, 255, 0.01) 77%, rgba(53, 133, 255, 0) 100%);
+.course-type-item{
+	width: 260px;
+    height: 100px;
+    flex: 1;
 }
-.swiper-t > div{
-	width: 840px;
-	height: 373px;
-}
-.el-carousel{
- 	height: 373px;
-}
-.el-carousel img{
-	width: 100%;
-	height: 373px;
-}
-::v-deep .el-carousel__container{
-	height: 373px;
-}
-.swiper-b{
+.course-type-item a{
 	display: flex;
-}
-.swiper-b li{
-	display: flex;
-	align-items: center;
 	justify-content: center;
-	width: 213px;
-	height: 133px;
-	cursor: pointer;
-	background: #FFFFFF;
-	border-radius: 0px 0px 0px 11px;
+	text-decoration: none;
 }
-.swiper-b li img{
-	width: 64px;
-	height: 64px;
+.course-type-item-icon{
+	font-size: 35px;
+    border-radius: 50%;
+    margin: 25px 10px 25px 0;
+    width: 50px;
+    height: 50px;
+    background: #55ee8b;
+    text-align: center;
+    line-height: 50px;
+    color: #ffffff;
 }
-.swiper-b li div{
-	margin-left: 11px;
+.course-type-item-icon img{
+	width: 100%;
+	height: 100%;
 }
-.swiper-b li div h4{
-	font-size: 16px;
-	color: #333333;
+.course-type-item-text{
+	margin: 25px 0;
 }
-.swiper-b li div span{
-	font-size: 12px;
+.course-type-item-title{
+	font-size: 18px;
+    line-height: 30px;
+    font-weight: bold;
+}
+.course-type-item-desc{
 	color: #808080;
+    font-size: 14px;
 }
 </style>
